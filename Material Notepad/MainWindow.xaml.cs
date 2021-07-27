@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,6 +161,30 @@ namespace Material_Notepad
             var result = await DialogHost.Show(view, "RootDialog");
 
             // MessageBox.Show(((bool)result).ToString());
+        }
+
+        protected override async void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (!string.IsNullOrEmpty(textbox.Text))
+            {
+                var view = new Dialogs.ConfirmationDialog
+                {
+                    DataContext = new ViewModels.ConfirmationDialogViewModel
+                    {
+                        Title = "Confirm",
+                        Message = "Do you really want to exit, there is text which will be discarded?",
+                    }
+                };
+
+                e.Cancel = true;
+
+                //show the dialog
+                var result = await DialogHost.Show(view, "RootDialog");
+                if ((bool)result)
+                    Environment.Exit(0);
+            }
         }
     }
 }
