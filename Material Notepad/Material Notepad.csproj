@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
   </ItemGroup>
 
 </Project>

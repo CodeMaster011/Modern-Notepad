@@ -21,16 +21,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <materialDesign:DialogHost
+            Grid.RowSpan="2"
+        Identifier="RootDialog"
+        DialogTheme="Inherit"
+        SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"/>
+
         <ToolBar
             Style="{DynamicResource MaterialDesignToolBar}"
             ClipToBounds="False"
             ToolBarTray.IsLocked="True" >
             <Button 
                 ToolTip="New"
-                Content="{materialDesign:PackIcon Kind=NewBox}"/>
+                Content="{materialDesign:PackIcon Kind=NewBox}"
+                x:Name="newButton"
+                Click="newButton_Click"/>
             <Button 
                 ToolTip="New Window"
-                Content="{materialDesign:PackIcon Kind=WindowRestore}"/>
+                Content="{materialDesign:PackIcon Kind=WindowRestore}"
+                x:Name="newWindowButton"
+                Click="newWindowButton_Click"/>
             <Separator/>
             
             <Button 
@@ -38,10 +48,14 @@
                 Content="{materialDesign:PackIcon Kind=BookOpenPageVariant}"/>
             <Button 
                 ToolTip="Save"
-                Content="{materialDesign:PackIcon Kind=ContentSave}"/>
+                Content="{materialDesign:PackIcon Kind=ContentSave}"
+                x:Name="saveButton"
+                Click="saveButton_Click"/>
             <Button 
                 ToolTip="Save As"
-                Content="{materialDesign:PackIcon Kind=ContentSaveMoveOutline}"/>
+                Content="{materialDesign:PackIcon Kind=ContentSaveMoveOutline}"
+                x:Name="saveAsButton"
+                Click="saveAsButton_Click"/>
 
             <Separator/>
             
@@ -83,14 +97,16 @@
                 Content="Font size:"
                 VerticalAlignment="Center"/>
 
-            <ComboBox>
-                <ComboBoxItem Content="10"/>
+            <ComboBox x:Name="fontComboBox" SelectionChanged="fontComboBox_SelectionChanged">
+                <!--<ComboBoxItem Content="10"/>
                 <ComboBoxItem IsSelected="True" Content="12"/>
                 <ComboBoxItem Content="14"/>
-                <ComboBoxItem Content="16"/>
+                <ComboBoxItem Content="16"/>-->
             </ComboBox>
 
-            <CheckBox Content="Word Wrap"/>
+            <CheckBox Content="Word Wrap"
+                      x:Name="wordWrapButton"
+                      Click="wordWrapButton_Click"/>
         </ToolBar>
         <TextBox 
             BorderThickness="0"
@@ -105,11 +121,14 @@
             Padding="10 10 0 0"
             AllowDrop="True"
             Drop="textbox_Drop"
-            PreviewDrop="textbox_PreviewDrop"
-            DragEnter="textbox_DragEnter"
             PreviewDragOver="textbox_PreviewDragOver"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             HorizontalContentAlignment="Stretch"/>
+
+        <materialDesign:Snackbar
+                        x:Name="MainSnackbar"
+                        MessageQueue="{materialDesign:MessageQueue}"
+                        Grid.Row="1"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,30 @@ namespace Material_Notepad
     /// </summary>
     public partial class MainWindow : Window
     {
+        string title = "Material Notepad";
         bool isDark = true;
+        string currentFilePath = null;
+        string currentFileName = "Note.txt";
+
         public MainWindow()
         {
             InitializeComponent();
+            UpdateTitle();
+            CreateFontSize();
+        }
+
+        public void CreateFontSize()
+        {
+            // fontComboBox.ItemsSource
+            var fontSizes = new List<int>();
+            var f = 8;
+            for (int i = 0; i < 20; i++)
+            {
+                if((f + i) % 2 == 0)
+                    fontSizes.Add(f + i);
+            }
+            fontComboBox.ItemsSource = fontSizes;
+            fontComboBox.SelectedItem = fontSizes.Find(d => d == 14);
         }
 
         private void changeThemeDark_Click(object sender, RoutedEventArgs e)
@@ -70,22 +91,75 @@ namespace Material_Notepad
 
         }
 
-        private void textbox_PreviewDrop(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Copy;
-
-            var formates = e.Data.GetFormats();
-            Console.WriteLine("Hello");
-        }
-
-        private void textbox_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.Copy;
-        }
-
         private void textbox_PreviewDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void newWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            new MainWindow().Show();
+        }
+
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrEmpty(currentFilePath))
+            {
+                saveAsButton_Click(null, null);
+            }
+            else
+            {
+                await System.IO.File.WriteAllTextAsync(currentFilePath, textbox.Text);
+                UpdateTitle();
+                MainSnackbar.MessageQueue?.Enqueue("File saved successfully");
+            }
+        }
+
+        private async void saveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dig = new SaveFileDialog();
+            if (dig.ShowDialog() != true) return;
+            
+
+            var filePath = dig.FileName;
+            currentFileName = System.IO.Path.GetFileName(filePath);
+
+            await System.IO.File.WriteAllTextAsync(filePath, textbox.Text);
+
+            UpdateTitle();
+            MainSnackbar.MessageQueue?.Enqueue("File saved successfully");
+        }
+
+        public void UpdateTitle()
+        {
+            Title = $"{title} - {currentFileName}".Trim();
+        }
+
+        private void wordWrapButton_Click(object sender, RoutedEventArgs e)
+        {
+            textbox.TextWrapping = wordWrapButton.IsChecked.GetValueOrDefault(false) ? TextWrapping.Wrap : TextWrapping.NoWrap;
+        }
+
+        private void fontComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            textbox.FontSize = (int)fontComboBox.SelectedItem;
+        }
+
+        private async void newButton_Click(object sender, RoutedEventArgs e)
+        {
+            var view = new Dialogs.ConfirmationDialog
+            {
+                DataContext = new ViewModels.ConfirmationDialogViewModel
+                {
+                    Title = "Confirm",
+                    Message = "You want to remove the data?",
+                }
+            };
+
+            //show the dialog
+            var result = await DialogHost.Show(view, "RootDialog");
+
+            // MessageBox.Show(((bool)result).ToString());
         }
     }
 }
