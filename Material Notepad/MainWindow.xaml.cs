@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using Material_Notepad.ViewModels;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -27,12 +28,16 @@ namespace Material_Notepad
         bool isDark = true;
         string currentFilePath = null;
         string currentFileName = "Note.txt";
+        bool forceExit = false;
 
         public MainWindow()
         {
             InitializeComponent();
             UpdateTitle();
             CreateFontSize();
+
+            (Resources["vm"] as FindUserControlViewModel).DocumentTextBox = textbox;
+            (Resources["vm"] as FindUserControlViewModel).ParentView = findReplaceView;
         }
 
         public void CreateFontSize()
@@ -119,6 +124,7 @@ namespace Material_Notepad
         private async void saveAsButton_Click(object sender, RoutedEventArgs e)
         {
             var dig = new SaveFileDialog();
+            dig.Filter = "All Files|*.*";
             if (dig.ShowDialog() != true) return;
             
 
@@ -167,7 +173,7 @@ namespace Material_Notepad
         {
             base.OnClosing(e);
 
-            if (!string.IsNullOrEmpty(textbox.Text))
+            if (!forceExit && !string.IsNullOrEmpty(textbox.Text))
             {
                 var view = new Dialogs.ConfirmationDialog
                 {
@@ -180,11 +186,22 @@ namespace Material_Notepad
 
                 e.Cancel = true;
 
-                //show the dialog
                 var result = await DialogHost.Show(view, "RootDialog");
                 if ((bool)result)
-                    Environment.Exit(0);
+                {
+                    forceExit = true;
+                    Close();
+                }
             }
+        }
+
+        private void findButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Resources["vm"] as 
+            if (findReplaceView.Visibility == Visibility.Collapsed)
+                findReplaceView.Visibility = Visibility.Visible;
+            else if (findReplaceView.Visibility == Visibility.Visible)
+                findReplaceView.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="Material_Notepad.CustomControl.FindUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Material_Notepad.CustomControl"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="Show or hide replace text"
+            Grid.Row="0"
+            Grid.Column="0"
+            Command="{Binding ShowOrHideReplaceLineCommand}">
+            <materialDesign:PackIcon Kind="ArrowDown" />
+        </Button>
+
+        <!--Find text box-->
+        <TextBox Text="{Binding FindText}"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   HorizontalAlignment="Stretch"
+                 VerticalContentAlignment="Center"
+                 VerticalAlignment="Center"
+                 materialDesign:HintAssist.Hint="Find text"
+                 Margin="10 0"/>
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="Find next"
+            Grid.Column="2"
+            Grid.Row="0"
+            Command="{Binding FindNextCommand}">
+            <materialDesign:PackIcon Kind="ChevronRight"/>
+        </Button>
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="Close"
+            Grid.Column="3"
+            Grid.Row="0"
+            Command="{Binding CloseCommand}">
+            <materialDesign:PackIcon Kind="Close"/>
+        </Button>
+
+        <!--Replace text box-->
+        <TextBox Text="{Binding ReplaceText}"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalAlignment="Stretch"
+                 VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 materialDesign:HintAssist.Hint="Replace with text"
+                 Visibility="{Binding IsReplaceVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                 Margin="10 0"/>
+
+        <Button
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="Replace text"
+            Grid.Column="2"
+            Grid.Row="1"
+            Visibility="{Binding IsReplaceVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <materialDesign:PackIcon Kind="FileReplace"/>
+        </Button>
+    </Grid>
+</UserControl>

@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Material_Notepad"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:ctl="clr-namespace:Material_Notepad.CustomControl"
+        xmlns:viewModels="clr-namespace:Material_Notepad.ViewModels"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Material Notepad" Height="500" Width="900"
@@ -16,6 +18,9 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         AllowDrop="True">
+    <Window.Resources>
+        <viewModels:FindUserControlViewModel x:Key="vm" x:Name="vm"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -81,10 +86,11 @@
             <Separator/>
 
             <Button
-                Command="Find"
                 ToolTip="Find"
                 ToolBar.OverflowMode="AsNeeded"
-                Content="{materialDesign:PackIcon Kind=Magnify}"/>
+                Content="{materialDesign:PackIcon Kind=Magnify}"
+                x:Name="findButton"
+                Click="findButton_Click"/>
 
             <Button
                 Command="Find"
@@ -124,7 +130,21 @@
             PreviewDragOver="textbox_PreviewDragOver"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"/>
+            HorizontalContentAlignment="Stretch"
+            FontFamily="{StaticResource Comfortaa}"
+            SelectionBrush="{DynamicResource SecondaryHueDarkBrush}"
+            SelectionTextBrush="{DynamicResource SecondaryHueDarkForegroundBrush}"/>
+
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top">
+            <materialDesign:Card Padding="10 20 10 20"
+                                 Width="400"
+                                 x:Name="findReplaceView"
+                                 Visibility="Collapsed">
+                <ctl:FindUserControl DataContext="{StaticResource vm}"/>
+            </materialDesign:Card>
+        </Grid>
 
         <materialDesign:Snackbar
                         x:Name="MainSnackbar"
