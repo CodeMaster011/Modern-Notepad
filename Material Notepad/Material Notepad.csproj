@@ -8,6 +8,8 @@
     <ApplicationIcon>Res\Icons\notes.ico</ApplicationIcon>
     <Authors>Suman Karan</Authors>
     <Copyright>(c) Suman Karan 2021</Copyright>
+    <Configurations>Debug;Release;ReleaseX86;ReleaseX64</Configurations>
+    <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
