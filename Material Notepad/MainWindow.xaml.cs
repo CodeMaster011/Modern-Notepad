@@ -54,6 +54,21 @@ namespace Material_Notepad
             fontComboBox.SelectedItem = fontSizes.Find(d => d == 14);
         }
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            if(e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                e.Handled = true;
+                saveButton_Click(null, null);
+            }
+            if (e.Key == Key.O && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                e.Handled = true;
+                openButton_Click(null, null);
+            }
+        }
+
         private void changeThemeDark_Click(object sender, RoutedEventArgs e)
         {
             ApplyBase(isDark = !isDark);
@@ -74,27 +89,6 @@ namespace Material_Notepad
             var file = filePaths.FirstOrDefault();
             var text = await System.IO.File.ReadAllTextAsync(file);
             textbox.Text += text;
-            //var formates = e.Data.GetFormats();
-            //foreach (var formate in formates)
-            //{
-            //    try
-            //    {
-            //        object data = e.Data.GetData(formate);
-            //        textbox.Text += $"{formate}: " + data + "\n";
-            //        if(data.GetType() == typeof(string[]))
-            //        {
-            //            foreach (var line in (data as string[]))
-            //            {
-            //                textbox.Text += line + "\n";
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        textbox.Text += $"{formate}: " + ex.Message + "\n";
-            //    }
-            //}
-
         }
 
         private void textbox_PreviewDragOver(object sender, DragEventArgs e)
@@ -130,6 +124,7 @@ namespace Material_Notepad
 
             var filePath = dig.FileName;
             currentFileName = System.IO.Path.GetFileName(filePath);
+            currentFilePath = filePath;
 
             await System.IO.File.WriteAllTextAsync(filePath, textbox.Text);
 
@@ -154,19 +149,26 @@ namespace Material_Notepad
 
         private async void newButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(textbox.Text)) return;
+
             var view = new Dialogs.ConfirmationDialog
             {
-                DataContext = new ViewModels.ConfirmationDialogViewModel
+                DataContext = new ConfirmationDialogViewModel
                 {
                     Title = "Confirm",
-                    Message = "You want to remove the data?",
+                    Message = "You want to remove the current text?",
                 }
             };
 
             //show the dialog
-            var result = await DialogHost.Show(view, "RootDialog");
-
-            // MessageBox.Show(((bool)result).ToString());
+            var result = (bool) await DialogHost.Show(view, "RootDialog");
+            if(result)
+            {
+                currentFileName = "Note.txt";
+                currentFilePath = null;
+                textbox.Text = null;
+                UpdateTitle();
+            }
         }
 
         protected override async void OnClosing(CancelEventArgs e)
@@ -177,7 +179,7 @@ namespace Material_Notepad
             {
                 var view = new Dialogs.ConfirmationDialog
                 {
-                    DataContext = new ViewModels.ConfirmationDialogViewModel
+                    DataContext = new ConfirmationDialogViewModel
                     {
                         Title = "Confirm",
                         Message = "Do you really want to exit, there is text which will be discarded?",
@@ -197,11 +199,36 @@ namespace Material_Notepad
 
         private void findButton_Click(object sender, RoutedEventArgs e)
         {
-            // Resources["vm"] as 
             if (findReplaceView.Visibility == Visibility.Collapsed)
                 findReplaceView.Visibility = Visibility.Visible;
             else if (findReplaceView.Visibility == Visibility.Visible)
                 findReplaceView.Visibility = Visibility.Collapsed;
+        }
+
+        private async void openButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(textbox.Text))
+            {
+                var view = new Dialogs.ConfirmationDialog
+                {
+                    DataContext = new ConfirmationDialogViewModel
+                    {
+                        Title = "Confirm",
+                        Message = "You want to remove the current text?",
+                    }
+                };
+                var result = (bool)await DialogHost.Show(view, "RootDialog");
+                if (!result) return;
+            }
+
+            var dig = new OpenFileDialog();
+            if (dig.ShowDialog() != true) return;
+            var filePath = dig.FileName;
+            currentFileName = System.IO.Path.GetFileName(filePath);
+            currentFilePath = filePath;
+
+            textbox.Text = await System.IO.File.ReadAllTextAsync(filePath);
+            UpdateTitle();
         }
     }
 }

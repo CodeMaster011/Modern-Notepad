@@ -50,7 +50,9 @@
             
             <Button 
                 ToolTip="Open"
-                Content="{materialDesign:PackIcon Kind=BookOpenPageVariant}"/>
+                Content="{materialDesign:PackIcon Kind=BookOpenPageVariant}"
+                x:Name="openButton"
+                Click="openButton_Click"/>
             <Button 
                 ToolTip="Save"
                 Content="{materialDesign:PackIcon Kind=ContentSave}"
