@@ -17,7 +17,7 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        AllowDrop="True">
+        AllowDrop="True" >
     <Window.Resources>
         <viewModels:FindUserControlViewModel x:Key="vm" x:Name="vm"/>
     </Window.Resources>
