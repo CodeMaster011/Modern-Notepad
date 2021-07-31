@@ -7,9 +7,10 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ctl="clr-namespace:Material_Notepad.CustomControl"
         xmlns:viewModels="clr-namespace:Material_Notepad.ViewModels"
+        xmlns:convt="clr-namespace:Material_Notepad.ValueConverters"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Material Notepad" Height="500" Width="900"
+        Title="Material Notepad" Height="600" Width="1000"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="15"
@@ -17,9 +18,11 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
+        x:Name="window"
         AllowDrop="True" >
     <Window.Resources>
         <viewModels:FindUserControlViewModel x:Key="vm" x:Name="vm"/>
+        <convt:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -36,6 +39,18 @@
             Style="{DynamicResource MaterialDesignToolBar}"
             ClipToBounds="False"
             ToolBarTray.IsLocked="True" >
+            <Button 
+                ToolTip="Pin"
+                Visibility="{Binding ElementName=window, Path=Topmost, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                Content="{materialDesign:PackIcon Kind=Pin}"
+                x:Name="pinButton"
+                Click="pinButton_Click"/>
+            <Button 
+                ToolTip="Unpin"
+                Visibility="{Binding ElementName=window, Path=Topmost, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Content="{materialDesign:PackIcon Kind=PinOutline}"
+                x:Name="unpinButton" 
+                Click="unpinButton_Click"/>
             <Button 
                 ToolTip="New"
                 Content="{materialDesign:PackIcon Kind=NewBox}"
@@ -113,8 +128,17 @@
             </ComboBox>
 
             <CheckBox Content="Word Wrap"
+                      ToolBar.OverflowMode="AsNeeded"
                       x:Name="wordWrapButton"
                       Click="wordWrapButton_Click"/>
+            
+            <Button Content="A"
+                    ToolTip="About"
+                    ToolBar.OverflowMode="AsNeeded"
+                    x:Name="aboutButton"
+                    FontSize="14pt"
+                    Click="aboutButton_Click"
+                    Foreground="{DynamicResource SecondaryHueDarkBrush}"/>
         </ToolBar>
         <TextBox 
             BorderThickness="0"

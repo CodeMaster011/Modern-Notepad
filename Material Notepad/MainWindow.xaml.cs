@@ -38,6 +38,8 @@ namespace Material_Notepad
 
             (Resources["vm"] as FindUserControlViewModel).DocumentTextBox = textbox;
             (Resources["vm"] as FindUserControlViewModel).ParentView = findReplaceView;
+
+            textbox.Focus();
         }
 
         public void CreateFontSize()
@@ -229,6 +231,21 @@ namespace Material_Notepad
 
             textbox.Text = await System.IO.File.ReadAllTextAsync(filePath);
             UpdateTitle();
+        }
+
+        private void pinButton_Click(object sender, RoutedEventArgs e)
+        {
+            Topmost = true;
+        }
+
+        private void unpinButton_Click(object sender, RoutedEventArgs e)
+        {
+            Topmost = false;
+        }
+
+        private void aboutButton_Click(object sender, RoutedEventArgs e)
+        {
+            new AboutWindow() { Owner = this }.ShowDialog();
         }
     }
 }
