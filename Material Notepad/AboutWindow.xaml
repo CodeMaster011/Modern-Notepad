@@ -1,0 +1,55 @@
+﻿<Window x:Class="Material_Notepad.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Material_Notepad"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:ctl="clr-namespace:Material_Notepad.CustomControl"
+        xmlns:viewModels="clr-namespace:Material_Notepad.ViewModels"
+        xmlns:convt="clr-namespace:Material_Notepad.ValueConverters"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="About Material Notepad" Height="500" Width="900"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="15"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border BorderThickness="0 0 0 0" BorderBrush="{DynamicResource SystemAccentColorLight3Brush}" Margin="0 0 0 10" Padding="0 0 0 3">
+            <TextBlock Text="Material Notepad" Style="{DynamicResource TitleTextBlockStyle}" 
+                       FontSize="32"
+                       Margin="0 15"
+                       FontFamily="{StaticResource Comfortaa}"
+                   Foreground="{DynamicResource SecondaryHueDarkBrush}"/>
+        </Border>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0 10">
+            <TextBlock Text="Material Notepad 2021"/>
+            <TextBlock Text="Version " x:Name="versionTextblock"/>
+            <TextBlock Text="(c) 2021 Suman Karan (Integrity Solution)."/>
+            <TextBlock Text="All right reserved."/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="3">
+            <TextBlock 
+                TextWrapping="Wrap"
+                Text="Warning: Unauthorized reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law."/>
+        </StackPanel>
+
+        <Grid HorizontalAlignment="Right" Grid.RowSpan="5" VerticalAlignment="Top" Margin="0 0 100 0" Panel.ZIndex="-10">
+            <StackPanel Orientation="Horizontal" Opacity="0.5">
+                <Border Width="30" Height="200" Background="#c54b8c" CornerRadius="15" Margin="0 -200 0 0"/>
+                <Border Width="30" Height="200" Background="#fbca1b" CornerRadius="15" Margin="10 -50 0 0"/>
+                <Border Width="30" Height="200" Background="#68aa55" CornerRadius="15" Margin="10 -300 0 0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
